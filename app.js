@@ -73,7 +73,7 @@ app.post("/joinRoom",function(req,res){
 });
 
 app.listen(port,function(){
-    console.log("Server listening ....");
+    console.log("Server listening with port ....",port);
     //console.log(config);
 })
 
