@@ -18,7 +18,7 @@ app.use(function(req,res,next){
 
 app.set("view engine","ejs");
 
-N.API.init(config.nuve.superserviceID, config.nuve.superserviceKey, 'http://192.168.1.21:3000/');
+N.API.init(config.nuve.superserviceID, config.nuve.superserviceKey, 'http://118.69.135.101:3000/');
 
 app.get("/",function(req,res){
     getRoomIDByRoomName("basicExampleRoom",function(roomID){

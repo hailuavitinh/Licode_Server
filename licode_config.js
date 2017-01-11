@@ -1,5 +1,5 @@
 var config = {};
 config.nuve = {};
-config.nuve.superserviceID = '586c7c63de5cf0c6c21557d4';
-config.nuve.superserviceKey = '8123';
+config.nuve.superserviceID = '5875dd5fbe5bec23e481f579';
+config.nuve.superserviceKey = '6836';
 module.exports = config;
