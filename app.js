@@ -5,7 +5,7 @@ var express = require('express'),
     config = require('./licode_config');
 
 var app = express();
-var port = process.env.port || 3000;
+var port = process.env.port || 3005;
 app.use(morgan("dev"));
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
