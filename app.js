@@ -28,6 +28,9 @@ mongoose.connect(config.getMongoConnectString());
 
 roomController(app);
 
+app.get("/",function(req,res){
+    res.render("index");
+});
 
 /* Begin
 N.API.init(config.nuve.superserviceID, config.nuve.superserviceKey, 'http://118.69.135.101:3000/');
