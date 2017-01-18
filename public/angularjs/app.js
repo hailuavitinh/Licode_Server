@@ -13,9 +13,16 @@ FConfApp.config(function($routeProvider,$locationProvider){
         .when('/rooms',{
             templateUrl:'angularjs/views/rooms.html',
             controller:'roomsController'
+        })
+        .when('/join/:roomID',{
+            templateUrl:'angularjs/views/join.html',
+            controller:'joinController'
+        }).
+        when('/join',{
+            templateUrl:'angularjs/views/joinError.html'
         });
 
-        $locationProvider.html5Mode(true);
+        // $locationProvider.html5Mode(true);
 })
 
 FConfApp.controller('mainController',function($scope){
@@ -32,3 +39,26 @@ FConfApp.controller('roomsController',function($scope){
     console.log("rooms");
     $scope.message='rooms Controller';
 });
+
+
+
+FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function($scope,$routeParams,svRooms){
+    
+    var roomID = $routeParams.roomID;
+    console.log("Angular Join: ",roomID);
+    var room;
+    svRooms.get(roomID).then(function(success){
+        console.log("API Room: ",success)
+        room = success.data;
+        $scope.room = room;
+    },function(error){
+        console.log("API Room Error: ",error);
+        $(".header-join").css('display','none');
+        $("#errorDiv").css('display','');
+        $scope.error = error.data;
+    });
+    
+   
+
+    
+}])

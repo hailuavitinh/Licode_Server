@@ -2,7 +2,7 @@
 <html ng-app="FConfApp">
 
 <head>
-    <base href="/">
+    <!--<base href="/">-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lobster" />
@@ -12,7 +12,9 @@
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
+    <!--<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>-->
     <script type="text/javascript" src="./angularjs/app.js"></script>
+    <script type="text/javascript" src="./angularjs/services/svRooms.js"></script>
     <style>
           /*.sidebar{
               background-color: darkgray;
@@ -67,13 +69,13 @@
                 </div>
                 <div class="navbar-collapse collapse navbar-responsive-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/rooms">Rooms</a></li>
+                        <li><a href="#!/">Home</a></li>
+                        <li><a href="#!/rooms">Rooms</a></li>
                     </ul>
                 </div>
                 <!--<ul class="nav navbar-nav navbar-right" style="padding-right: 5px;">
                     <li><a href="/">Home</a></li>
-                    <li><a href="/about">Rooms</a></li>
+                    <li><a href="/rooms">Rooms</a></li>
                 </ul>-->
             </nav>
         </header>
@@ -85,9 +87,8 @@
     </div>
     <div class="menu-left" id="myMenuLeft">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/contact">Contact</a>
+        <a href="#!/">Home</a>
+        <a href="#!/rooms">Rooms</a>
     </div>
 
 
