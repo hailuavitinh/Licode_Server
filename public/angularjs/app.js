@@ -28,6 +28,18 @@ FConfApp.config(function($routeProvider,$locationProvider){
 FConfApp.controller('mainController',function($scope){
     console.log("Angular");
     $scope.message = 'main Controller';
+    $scope.my = {isShow:true};
+
+    $scope.ngShow = function(){
+        if($scope.my.isShow){
+            console.log($scope.my.isShow);
+            $scope.my.isShow = false;
+        } else {
+            console.log($scope.my.isShow);
+            $scope.my.isShow = true;
+        }  
+    }
+
 });
 
 FConfApp.controller('aboutController',function($scope){
@@ -44,6 +56,8 @@ FConfApp.controller('roomsController',function($scope){
 
 FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function($scope,$routeParams,svRooms){
     
+    $scope.isShowVideoConfernce = false;
+
     var roomID = $routeParams.roomID;
     console.log("Angular Join: ",roomID);
     var room;
@@ -54,11 +68,88 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
     },function(error){
         console.log("API Room Error: ",error);
         $(".header-join").css('display','none');
+        $("#inpUserName").css('display','none');
         $("#errorDiv").css('display','');
         $scope.error = error.data;
     });
     
-   
+
+
+   $scope.accessRoom = function(){
+       console.log("Click accessRoom");
+       var userName = $("#inpUserName").val();
+       if(userName === null || userName === "" || userName === undefined){
+           $scope.error = "Please enter User Name to start talking !!!!"
+           $("#errorDiv").css('display','');
+       } else {
+           var obj = {roomID:room._id,username:userName};
+           $scope.isShowVideoConfernce = true;
+        //    svRooms.createToken(obj).then(function(success){
+        //        $scope.isHidenVideoConfernce = false;
+        //    },function(error){
+        //         $scope.error = error.data;
+        //         $("#errorDiv").css('display','');
+        //    });
+       }
+   }
+
+
+   function InitLocalStream(roomID, token){
+       localStream = Erizo.Stream({audio: false, video: true, data: true});
+       var roomErizo = Erizo.Room({token:token});
+       localStream.init();
+       localStream.addEventListener("access-accepted", function () {
+            localStream.play("localStream");
+            console.log("Local: ",localStream);
+            console.log("token:",L.Base64.decodeBase64(token));
+            room.connect();
+
+            var subscribeToStream = function(streams){
+                console.log("subscribeToStream Array Stream: ",streams);
+                for (var index in streams){
+                    var stream = streams[index];
+                    console.log("subscribeToStream Stream :",stream);
+                    console.log("subscribeToStream StreamID :",stream.getID());
+                    if(localStream.getID() !== stream.getID()){
+                        room.subscribe(stream);
+                    }
+                }
+            }
+
+            var remoteDiv_RemoteStream = function(elementID){
+                $("#"+elementID).remove();
+            }
+
+            room.addEventListener("room-connected",function(event){
+                room.publish(localStream);
+                console.log("room connected");
+                subscribeToStream(event.streams);
+            });
+
+            room.addEventListener("stream-subscribed",function(streamEvent){
+                console.log("stream subscribed: ",streamEvent);
+                var stream = streamEvent.stream;
+                var div = document.createElement('div');
+                div.setAttribute("class", "itemStreamVideo");
+                div.setAttribute("id",idRmStream);
+                $(".streamVideo").prepend(div);
+                stream.play(idRmStream);
+            });
+
+            room.addEventListener("stream-added",function(streamEvent){
+                var streams = [];
+                streams.push(streamEvent.stream);
+                subscribeToStream(streams);
+            });
+
+            room.addEventListener("stream-removed",function(streamEvent){
+                var stream = streamEvent.stream;
+                if(stream.elementID !== undefined){
+                    remoteDiv_RemoteStream(stream.elementID);
+                }
+            });
+        })
+   }
 
     
 }])

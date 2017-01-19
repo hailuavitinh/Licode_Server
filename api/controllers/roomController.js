@@ -13,6 +13,13 @@ N.API.init(config.nuve.superserviceID, config.nuve.superserviceKey, 'http://118.
 //     },errCallBackNuve(res))
 // };
 
+var checkStringNullOrEmty = function(a){
+    if(a === null || a === "" || a === undefined){
+        return true;
+    } else {
+        return false;
+    }
+}
 
 var getRooms = function(callback){
     var res = arguments[1];
@@ -38,16 +45,25 @@ var getRoomByID = function(callback){
         console.log("Error Nuve",err);
         res.status(404).send(err);
     });
-
-
-
-    // N.API.getRoom(roomID,function(resp){
-    //     console.log("API Room: ",resp);
-    //     var room = JSON.parse(resp);
-    //     callback(room);
-    // },errCallBackNuve)
 }
 
+
+
+var createToken = function (callback){
+    var roomID = arguments[1];
+    var username = arguments[2];
+    var role = arguments[3];
+    var res = arguments[4];
+
+    console.log("Access createToken -- RoomID: "+roomID + " - User: "+username + " - Role: "+role);
+    N.API.createToken(roomID, username, role, function(token) {
+        console.log("token: ",token);
+        callback(token);
+    },function(err){
+        console.log("Token Error: ",err);
+        res.status(503).send(err);
+    })
+}
 
 var errCallBackNuve = function(res,err){
     console.log("Error Nuve",err);
@@ -83,5 +99,22 @@ module.exports = function(app) {
         },roomID,res)
     });
 
+    app.post("/api/createToken",function(req,res){
+        var roomID = req.body.roomID;
+        var username = req.body.username;
+        var role = "presenter";
+        console.log("API create token - roomID: "+roomID + " - username: "+username);
+
+        if(checkStringNullOrEmty(roomID) || checkStringNullOrEmty(username)){
+            res.status(503).send("Please check roomID or username.  !!!")
+        } else {
+            createToken(function(token){
+                if(token == null || token == undefined ){
+                    res.status(500).send(JSON.stringify({error:"The Erizo have problem."}));
+                }
+                res.send(JSON.stringify({Token:token})); 
+            },roomID,username,role,res);
+        }
+    });
 
 }
