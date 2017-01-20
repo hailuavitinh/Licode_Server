@@ -7,10 +7,10 @@ var express = require('express'),
 
 
 
-//var roomController = require(appRoot+"/api/controllers/roomController");
-//var config = require(appRoot+'/config/config');
-var N = require(appRoot+"/libs/nuve.js");
-var config = require(appRoot+"/config/licode_config");
+var roomController = require(appRoot+"/api/controllers/roomController");
+var config = require(appRoot+'/config/config');
+// var N = require(appRoot+"/libs/nuve.js");
+// var config = require(appRoot+"/config/licode_config");
 
 var app = express();
 var port = process.env.port || 3005;
@@ -25,16 +25,16 @@ app.use(function(req,res,next){
 });
 
 app.set("view engine","ejs");
-//console.log(config.getMongoConnectString());
-//mongoose.connect(config.getMongoConnectString());
+console.log(config.getMongoConnectString());
+mongoose.connect(config.getMongoConnectString());
 
-//roomController(app);
+roomController(app);
 
-// app.get("/",function(req,res){
-//     res.render("index");
-// });
+app.get("/",function(req,res){
+    res.render("index");
+});
 
-/* Begin*/
+/* Begin
 N.API.init(config.nuve.superserviceID, config.nuve.superserviceKey, 'http://118.69.135.101:3000/');
 
 app.get("/",function(req,res){
@@ -100,7 +100,7 @@ app.post("/joinRoom",function(req,res){
 
         res.send(JSON.stringify({Token:token}));
     });
-});
+});*/
 
 app.listen(port,function(){
     console.log("Server listening with port ....",port);

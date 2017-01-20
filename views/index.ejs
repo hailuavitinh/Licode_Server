@@ -1,169 +1,112 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Licode Server</title>
-        <script
-  src="https://code.jquery.com/jquery-1.12.4.min.js"
-  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
-  crossorigin="anonymous"></script>
-        <script src="./js/erizo.js" type="text/javascript"></script>
-    </head>
-    <body>
-        <h1>Welcome Licode Server</h1>
-        <div class="showRoom">
-            <label>Room: <span id="infoRoomID" style="color:red; font-weight: bold"><%=roomID%></span></label>
-            <br>
-            <input type="text" id="username" placeholder="User Name">
-            <button type="submit"  onclick="joinRoom()"> Join Room</button>
+<html ng-app="FConfApp">
+
+<head>
+    <!--<base href="/">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lobster" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
+    <!--<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>-->
+    <script type="text/javascript" src="./angularjs/app.js"></script>
+    <script type="text/javascript" src="./angularjs/services/svRooms.js"></script>
+    <style>
+          /*.sidebar{
+              background-color: darkgray;
+              width: 250px;
+          }*/
+          .menu-left{
+              height: 100%;
+              width: 0;
+              position: fixed;
+              z-index: 1;
+              top:0;
+              left:0;
+              background-color: #111;
+              overflow-x: hidden;
+              padding-top: 60px;
+              transition: 0.5s;
+          }
+
+          .menu-left a{
+              padding: 8px 8px 8px 32px;
+              text-decoration: none;
+              font-size: 25px;
+              color: #818181;
+              display: block;
+              transition: 0.3s;
+          }
+
+          /*@media screen and (max-heigh:450px){
+              .
+          }*/
+       </style>
+</head>
+
+<body ng-controller="mainController">
+    <div id="main">
+        <!--<div class="navbar navbar-default" style="background-color:#dd4814">
+            <a><i class="fa fa-bars" style="font-size: 30px;color: white;line-height: inherit;float:left;padding-left: 5px;" aria-hidden="true" onclick="openMenu()"></i></a>
+            <a class="navbar-brand" style="color: #ffffff;font-size: 18px;font-family: Lobster;">F Conference</a>
+            <ul class="">
+                
+            </ul>
+        </div>-->
+
+
+        <header>
+            <nav class="navbar navbar-default">
+                <div>
+                    <a><i class="fa fa-bars" style="font-size: 30px;line-height: inherit;float:left;padding-left: 5px;" aria-hidden="true" onclick="openMenu()"></i></a>
+                </div>
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/" style="font-size: 18px;font-family: Lobster;">F Conference</a>
+                </div>
+                <div class="navbar-collapse collapse navbar-responsive-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#!/">Home</a></li>
+                        <li><a href="#!/rooms">Rooms</a></li>
+                    </ul>
+                </div>
+                <!--<ul class="nav navbar-nav navbar-right" style="padding-right: 5px;">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/rooms">Rooms</a></li>
+                </ul>-->
+            </nav>
+        </header>
+
+        <!--Main-->
+        <div id="mainContent">
+            <div ng-view></div>
         </div>
-        
-        <div class="showLocalStream">
-            <h4>Local Streamn</h4>
-            <div class="divLocalStream" style="display: flex; justify-content: flex-start;">
-                <div id="localStream" style="border: solid gray ;width:300px;height:250px;float:left;margin-right:100px"></div>
-                <div id="showtransaction" style="border: solid burlywood;float:left;width: 300px;height:250px;overflow-y: scroll; font-style: italic;"></div>
-            </div>
-            <button type="button" onclick="addDiv()">Append</button>
-            <div class="divRemoteStream" style="display: flex;flex-direction: row;justify-content: space-around;flex-wrap:wrap; ">
-            
-            </div>
-            <input type="text" id="inpdiv">
-            <button type="button" onclick="removeDiv()"></button>
-        </div>
-        
-        
-        <script>
+    </div>
+    <div class="menu-left" id="myMenuLeft">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#!/">Home</a>
+        <a href="#!/rooms">Rooms</a>
+    </div>
 
-            var localStream,token,room;
-            var i = 0;
-            window.onload = function(){
-                $(".showLocalStream").hide();
-                
+
+    <script>
+        var isMenuOpen = false
+        function openMenu() {
+            console.log("thanh");
+            if (isMenuOpen == false) {
+                document.getElementById("myMenuLeft").style.width = "250px";
+                document.getElementById("main").style.marginLeft = "250px";
+                isMenuOpen = true;
+            } else {
+                document.getElementById("myMenuLeft").style.width = "0";
+                document.getElementById("main").style.marginLeft = "0";
+                isMenuOpen = false;
             }
+        }
+    </script>
+</body>
 
-            function addDiv(){
-                i = i + 1;
-                var div = document.createElement('div');
-                div.setAttribute("style", "width: 200px; height: 150px;border: solid gray ;margin-top: 10px;");
-                 div.setAttribute("id", "div_"+i);
-                  
-                $(".divRemoteStream").prepend(div);
-            }
-
-            function removeDiv(){
-               
-                var d = document.getElementById("inpdiv").value;
-                 console.log("inp: ",d);
-                var divR = document.getElementById("div_"+d);
-                console.log("div remote: ",divR);
-                var strDiv = "#div_"+d
-                $(strDiv).remove();
-            }
-
-            function remoteDiv_RemoteStream(elementID){
-                $("#"+elementID).remove();
-            }
-
-            function append(content){
-                console.log("asdasd");
-                $("#showtransaction").append("<br/><span>&nbsp;"+content+"</span>").show("slow");
-            }
-
-            function joinRoom(){
-                var roomID = document.getElementById("infoRoomID").innerHTML;
-                var username = document.getElementById("username").value;
-                console.log("username",username);
-                
-               show();
-                              
-                $.ajax({
-                    url:"/joinRoom",
-                    dataType:"json",
-                    type:"POST",
-                    contentType:"application/json",
-                    data:JSON.stringify({roomID:roomID,username:username}),
-                    success: function(data,text){
-                        var token = data.Token;
-
-                        InitLocalStream(roomID,token);
-                        //console.log("Data :" , data);
-                    },
-                    error: function(request,data,error){
-                        alert("E: "+request + " - "+ data + " - " + error);
-                    }
-                });
-            }
-
-            function show(){
-                $(".showRoom").hide();
-                $(".showLocalStream").show();
-            }
-
-            function InitLocalStream(roomID,token){
-               localStream = Erizo.Stream({audio: false, video: true, data: true});
-               room = Erizo.Room({token:token});
-               localStream.init();
-               localStream.addEventListener("access-accepted", function () {
-
-                   
-                   localStream.play("localStream");
-                   console.log("Local: ",localStream);
-                   console.log("token:",L.Base64.decodeBase64(token));
-                   room.connect();
-
-                   var subscribeToStream = function(streams){
-                       console.log("subscribeToStream Array Stream: ",streams);
-                       for (var index in streams){
-                           var stream = streams[index];
-                           console.log("subscribeToStream Stream :",stream);
-                           console.log("subscribeToStream StreamID :",stream.getID());
-                           if(localStream.getID() !== stream.getID()){
-                               room.subscribe(stream);
-                           }
-                       }
-                   }
-
-                   room.addEventListener("room-connected",function(event){
-                       room.publish(localStream);
-                       console.log("room connected");
-                       append("RoomID-"+roomID + " connected!");
-                       append("RoomID have "+event.streams.length + " connected!");
-                       subscribeToStream(event.streams);
-                   });
-
-                   room.addEventListener("stream-subscribed",function(streamEvent){
-                       append("LocalStream: "+localStream.getID());
-                       console.log("stream subscribed: ",streamEvent);
-                       var stream = streamEvent.stream;
-                       var idRmStream = "rmStream_"+stream.getID();
-                       append("stream subscribed: "+idRmStream);
-                       var div = document.createElement('div');
-                       div.setAttribute("style", "width: 200px; height: 150px;border: solid gray ;margin-top: 10px;");
-                       div.setAttribute("id",idRmStream);
-                        $(".divRemoteStream").prepend(div);
-                        stream.play(idRmStream);
-                   });
-
-                   room.addEventListener("stream-added",function(streamEvent){
-                       var streams = [];
-                       streams.push(streamEvent.stream);
-                       append("stream added: "+streamEvent.stream.getID());
-                       subscribeToStream(streams);
-                   });
-
-                   room.addEventListener("stream-removed",function(streamEvent){
-                       var stream = streamEvent.stream;
-                       if(stream.elementID !== undefined){
-                           append("stream removed: "+ stream.getID());
-                           remoteDiv_RemoteStream(stream.elementID);
-                       }
-                   });
-
-
-               });// localStream - Event access-accepted
-                
-            }
-
-        </script>
-    </body
 </html>
