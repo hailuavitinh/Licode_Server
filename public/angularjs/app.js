@@ -28,7 +28,7 @@ FConfApp.config(function($routeProvider,$locationProvider){
 FConfApp.controller('mainController',function($scope){
     console.log("Angular");
     $scope.message = 'main Controller';
-    $scope.my = {isShow:true};
+   
 
     $scope.ngShow = function(){
         if($scope.my.isShow){
@@ -56,20 +56,21 @@ FConfApp.controller('roomsController',function($scope){
 
 FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function($scope,$routeParams,svRooms){
     
-    $scope.isShowVideoConfernce = false;
+    $scope.my = {isShowVideoConfernce:false,isShowError:false};
+    
 
     var roomID = $routeParams.roomID;
     console.log("Angular Join: ",roomID);
-    var room;
+    var roomJson;
     svRooms.get(roomID).then(function(success){
         console.log("API Room: ",success)
-        room = success.data;
-        $scope.room = room;
+        roomJson = success.data;
+        $scope.roomJson = roomJson;
     },function(error){
         console.log("API Room Error: ",error);
         $(".header-join").css('display','none');
         $("#inpUserName").css('display','none');
-        $("#errorDiv").css('display','');
+        $scope.my.isShowError = true;
         $scope.error = error.data;
     });
     
@@ -80,23 +81,29 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
        var userName = $("#inpUserName").val();
        if(userName === null || userName === "" || userName === undefined){
            $scope.error = "Please enter User Name to start talking !!!!"
-           $("#errorDiv").css('display','');
+           $scope.my.isShowError = true;
+           $scope.my.isShowVideoConfernce = false;
        } else {
-           var obj = {roomID:room._id,username:userName};
-           $scope.isShowVideoConfernce = true;
-        //    svRooms.createToken(obj).then(function(success){
-        //        $scope.isHidenVideoConfernce = false;
-        //    },function(error){
-        //         $scope.error = error.data;
-        //         $("#errorDiv").css('display','');
-        //    });
+           var obj = {roomID:roomJson._id,username:userName};
+           svRooms.createToken(obj).then(function(success){
+               $scope.my.isShowVideoConfernce = true;
+               $scope.my.isShowError = false;
+               console.log("Token: ",success);
+               console.log(" InitLocalStream RoomID: ",roomJson._id);
+               console.log(" InitLocalStream Token: ",success.data.Token);
+               InitLocalStream(roomJson._id,success.data.Token);
+           },function(error){
+                $scope.error = error.data;
+                $scope.my.isShowError = false;
+           });
        }
    }
 
 
    function InitLocalStream(roomID, token){
        localStream = Erizo.Stream({audio: false, video: true, data: true});
-       var roomErizo = Erizo.Room({token:token});
+       var room = Erizo.Room({token:token});
+       var room;
        localStream.init();
        localStream.addEventListener("access-accepted", function () {
             localStream.play("localStream");

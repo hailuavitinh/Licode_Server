@@ -16,19 +16,19 @@
 <script src="./js/erizo.js" type="text/javascript"></script>
 
 <div class="header-join" style="padding-left: 20px;">
-    <h3>RoomID: {{room._id}} -- Name : {{room.name}}</h3>
+    <h3>RoomID: {{roomJson._id}} -- Name : {{roomJson.name}}</h3>
 </div>
 <div class="container">
     <div>
         <input type="text" id="inpUserName"  >
         <button type="button" ng-click="accessRoom()">Join</button>
     </div>
-    <div class="alert alert-danger" style="display: none" id="errorDiv" role="alert">
+    <div class="alert alert-danger" id="errorDiv" role="alert" ng-show="my.isShowError">
         {{error}}
     </div>
 </div>
-<div id="showVideoConfernce" ng-hide="isShowVideoConfernce">
+<div id="showVideoConfernce" ng-show="my.isShowVideoConfernce">
     <div class="streamVideo" >
-        <div id="localStream" style="border-color: chartreuse" class="itemStreamVideo" ></div>
+        <div id="localStream" style="border-color: chartreuse; border-style: solid" class="itemStreamVideo"></div>
     </div>
 </div>
