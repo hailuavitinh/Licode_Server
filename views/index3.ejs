@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html ng-app="FConfApp">
+
+<head>
+    <!--<base href="/">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lobster" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
+    <!--<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>-->
+    <script type="text/javascript" src="./angularjs/app.js"></script>
+    <script type="text/javascript" src="./angularjs/services/svRooms.js"></script>
+    <style>
+          /*.sidebar{
+              background-color: darkgray;
+              width: 250px;
+          }*/
+          .menu-left{
+              height: 100%;
+              width: 0;
+              position: fixed;
+              z-index: 1;
+              top:0;
+              left:0;
+              background-color: #111;
+              overflow-x: hidden;
+              padding-top: 60px;
+              transition: 0.5s;
+          }
+
+          .menu-left a{
+              padding: 8px 8px 8px 32px;
+              text-decoration: none;
+              font-size: 25px;
+              color: #818181;
+              display: block;
+              transition: 0.3s;
+          }
+
+          /*@media screen and (max-heigh:450px){
+              .
+          }*/
+       </style>
+</head>
+
+<body ng-controller="mainController">
+    <div id="main">
+        <!--<div class="navbar navbar-default" style="background-color:#dd4814">
+            <a><i class="fa fa-bars" style="font-size: 30px;color: white;line-height: inherit;float:left;padding-left: 5px;" aria-hidden="true" onclick="openMenu()"></i></a>
+            <a class="navbar-brand" style="color: #ffffff;font-size: 18px;font-family: Lobster;">F Conference</a>
+            <ul class="">
+                
+            </ul>
+        </div>-->
+
+
+        <header>
+            <nav class="navbar navbar-default">
+                <div>
+                    <a><i class="fa fa-bars" style="font-size: 30px;line-height: inherit;float:left;padding-left: 5px;" aria-hidden="true" onclick="openMenu()"></i></a>
+                </div>
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/" style="font-size: 18px;font-family: Lobster;">F Conference</a>
+                </div>
+                <div class="navbar-collapse collapse navbar-responsive-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#!/">Home</a></li>
+                        <li><a href="#!/rooms">Rooms</a></li>
+                    </ul>
+                </div>
+                <!--<ul class="nav navbar-nav navbar-right" style="padding-right: 5px;">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/rooms">Rooms</a></li>
+                </ul>-->
+            </nav>
+        </header>
+
+        <!--Main-->
+        <div id="mainContent">
+            <div ng-view></div>
+        </div>
+    </div>
+    <div class="menu-left" id="myMenuLeft">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#!/">Home</a>
+        <a href="#!/rooms">Rooms</a>
+    </div>
+
+
+    <script>
+        var isMenuOpen = false
+        function openMenu() {
+            console.log("thanh");
+            if (isMenuOpen == false) {
+                document.getElementById("myMenuLeft").style.width = "250px";
+                document.getElementById("main").style.marginLeft = "250px";
+                isMenuOpen = true;
+            } else {
+                document.getElementById("myMenuLeft").style.width = "0";
+                document.getElementById("main").style.marginLeft = "0";
+                isMenuOpen = false;
+            }
+        }
+    </script>
+</body>
+
+</html>
