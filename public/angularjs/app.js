@@ -130,6 +130,7 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
             room.addEventListener("room-connected",function(event){
                 room.publish(localStream);
                 console.log("room connected");
+                console.log("Local Stream: ",localStream.getID())
                 subscribeToStream(event.streams);
             });
 
