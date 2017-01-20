@@ -100,6 +100,37 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
    }
 
 
+   $scope.append =  function(){
+       $scope.my.isShowVideoConfernce = true;
+       var div = document.createElement('div');
+       div.setAttribute("class", "itemStreamVideo itemRemoveStreamVideo");
+       $(".streamVideo").prepend(div);
+       autoResizeItemContainer();
+   }
+
+   function autoResizeItemContainer(){
+       var i  = $(".itemStreamVideo").length;
+        console.log("i : ",i);
+        if(i < 3){
+            console.log("i<3: ",i);
+            $(".itemStreamVideo").css("width","30vw");
+            $(".itemStreamVideo").css("height","40vh");
+        } else if (i<5){
+            console.log("i<5: ",i);
+            $(".itemStreamVideo").css("width","20vw");
+            $(".itemStreamVideo").css("height","30vh");
+        } else if(i == 5){
+            console.log("i==5: ",i);
+            $(".itemStreamVideo").css("width","15vw");
+            $(".itemStreamVideo").css("height","25vh");
+        } else {
+            console.log("default: ",i);
+            $(".itemStreamVideo").css("width","12vw");
+            $(".itemStreamVideo").css("height","20vh");
+        }
+    }
+
+
    function InitLocalStream(roomID, token){
        localStream = Erizo.Stream({audio: false, video: true, data: true});
        var room = Erizo.Room({token:token});
@@ -141,6 +172,7 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
                 div.setAttribute("class", "itemStreamVideo");
                 div.setAttribute("id",idRmStream);
                 $(".streamVideo").prepend(div);
+                autoResizeItemContainer();
                 stream.play(idRmStream);
             });
 
