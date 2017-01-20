@@ -167,6 +167,7 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
             room.addEventListener("stream-subscribed", function(streamEvent) {
                 console.log("stream subscribed: ",streamEvent);
                 var stream = streamEvent.stream;
+                var idRmStream = "rmStream_"+stream.getID();
                 var div = document.createElement('div');
                 div.setAttribute("class", "itemStreamVideo");
                 div.setAttribute("id",idRmStream);
