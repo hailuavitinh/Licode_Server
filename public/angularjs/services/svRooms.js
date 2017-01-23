@@ -2,7 +2,10 @@ var app = angular.module("FConfApp");
 
 app.factory("svRooms",["$http",function($http){
     return {
-        get: function(roomID){
+        getRooms:function(){
+            return $http.get("api/rooms");
+        },
+        getRoomByID: function(roomID){
             return $http.get("/api/rooms/"+roomID);
         },
         createToken : function(data){

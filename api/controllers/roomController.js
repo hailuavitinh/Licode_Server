@@ -22,11 +22,10 @@ var checkStringNullOrEmty = function(a){
 }
 
 var getRooms = function(callback){
-    var res = arguments[1];
     N.API.getRooms(function(roomList){
         var rooms = JSON.parse(roomList);
         console.log("rooms: ",rooms);
-        callback(res,rooms);
+        callback(rooms);
     },function(err){
         console.log("Error Nuve",err);
         res.status(404).send(err);
@@ -84,7 +83,9 @@ var getRoomsFromFConf= function(res,roomList){
 
 module.exports = function(app) {
     app.get("/api/rooms",function(req,res){
-        getRooms(getRoomsFromFConf,res);
+        getRooms(function(rooms){
+            res.send(rooms);
+        })
     });
 
     app.get("/api/rooms/:id",function(req,res){
@@ -98,6 +99,8 @@ module.exports = function(app) {
             }
         },roomID,res)
     });
+
+
 
     app.post("/api/createToken",function(req,res){
         var roomID = req.body.roomID;
@@ -116,5 +119,7 @@ module.exports = function(app) {
             },roomID,username,role,res);
         }
     });
+
+
 
 }

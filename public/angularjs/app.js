@@ -47,22 +47,30 @@ FConfApp.controller('aboutController',function($scope){
     $scope.message='about Controller';
 });
 
-FConfApp.controller('roomsController',function($scope){
-    console.log("rooms");
+FConfApp.controller('roomsController',["$scope","svRooms","$location",function($scope,svRooms,$location){
+
+    var localUrl = $location.host()+":"+$location.port();
+    $scope.localUrl=localUrl+"/#!/";
+
+    svRooms.getRooms().then(function(success){
+        console.log("Angular Rooms: ",success);
+        $scope.rooms = success.data;
+    },function(error){
+        console.log("API Rooms error: ",error);
+    });
     $scope.message='rooms Controller';
-});
+}]);
 
 
 
 FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function($scope,$routeParams,svRooms){
     
     $scope.my = {isShowVideoConfernce:false,isShowError:false};
-    
 
     var roomID = $routeParams.roomID;
     console.log("Angular Join: ",roomID);
     var roomJson;
-    svRooms.get(roomID).then(function(success){
+    svRooms.getRoomByID(roomID).then(function(success){
         console.log("API Room: ",success)
         roomJson = success.data;
         $scope.roomJson = roomJson;

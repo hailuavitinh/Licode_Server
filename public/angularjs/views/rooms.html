@@ -15,34 +15,13 @@
                     <th>Link</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody ng-repeat="item in rooms">
                 <tr>
-                    <td>1</td>
-                    <td>2354nkjhklshflkjs</td>
-                    <td>Hop Nhom 01</td>
-                    <td>Phong VAS + Phong INF + Mobi</td>
-                    <td>htpp:localhost:3000/join/gykdgahdagdjhad</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>2354nkjhklshflkjs</td>
-                    <td>Hop Nhom 01</td>
-                    <td>Phong VAS + Phong INF + Mobi</td>
-                    <td>htpp:localhost:3000/join/gykdgahdagdjhad</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>2354nkjhklshflkjs</td>
-                    <td>Hop Nhom 01</td>
-                    <td>Phong VAS + Phong INF + Mobi</td>
-                    <td>htpp:localhost:3000/join/gykdgahdagdjhad</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>2354nkjhklshflkjs</td>
-                    <td>Hop Nhom 01</td>
-                    <td>Phong VAS + Phong INF + Mobi</td>
-                    <td>htpp:localhost:3000/join/gykdgahdagdjhad</td>
+                    <td>{{$index}}</td>
+                    <td>{{item._id}}</td>
+                    <td>{{item.name}}</td>
+                    <td></td>
+                    <td> <a href="#!/join/{{item._id}}">{{localUrl+"join/"+item._id}}</a> </td>
                 </tr>
             </tbody>
         </table>
