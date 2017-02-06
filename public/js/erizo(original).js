@@ -3712,14 +3712,14 @@ Erizo.Bar = function(b) {
     a.bar.setAttribute("class", "subbar");
     a.link = document.createElement("a");
     a.link.setAttribute("href",
-        "http://www.fpt.vn/");
+        "http://www.lynckia.com/");
     a.link.setAttribute("class", "link");
     a.link.setAttribute("target", "_blank");
     a.logo = document.createElement("img");
     a.logo.setAttribute("style", "width: 100%; height: 100%; max-width: 30px; position: absolute; top: 0; left: 2px;");
     a.logo.setAttribute("class", "logo");
-    a.logo.setAttribute("alt", "FPT");
-    a.logo.setAttribute("src", a.url + "/images/FPT_logo.png");
+    a.logo.setAttribute("alt", "Lynckia");
+    a.logo.setAttribute("src", a.url + "/assets/star.svg");
     f = function(b) {
         "block" !== b ? b = "none" : clearTimeout(c);
         a.div.setAttribute("style", "width: 100%; height: 100%; position: relative; bottom: 0; right: 0; display:" +
@@ -3757,34 +3757,34 @@ Erizo.Speaker = function(b) {
     a.div.setAttribute("style", "width: 40%; height: 100%; max-width: 32px; position: absolute; right: 0;z-index:0;");
     a.icon = document.createElement("img");
     a.icon.setAttribute("id", "volume_" + a.id);
-    a.icon.setAttribute("src", a.url + "/images/sound.png");
+    a.icon.setAttribute("src", a.url + "/assets/sound48.png");
     a.icon.setAttribute("style", "width: 80%; height: 100%; position: absolute;");
     a.div.appendChild(a.icon);
     a.stream.local ? (f = function() {
         a.media.muted = !0;
-        a.icon.setAttribute("src", a.url + "/images/mute.png");
+        a.icon.setAttribute("src", a.url + "/assets/mute48.png");
         a.stream.stream.getAudioTracks()[0].enabled = !1
     }, e = function() {
         a.media.muted = !1;
-        a.icon.setAttribute("src", a.url + "/images/sound.png");
+        a.icon.setAttribute("src", a.url + "/assets/sound48.png");
         a.stream.stream.getAudioTracks()[0].enabled = !0
     }, a.icon.onclick = function() {
         a.media.muted ? e() : f()
     }) : (a.picker = document.createElement("input"), a.picker.setAttribute("id", "picker_" + a.id), a.picker.type = "range", a.picker.min = 0, a.picker.max = 100, a.picker.step = 10, a.picker.value =
         i, a.picker.setAttribute("orient", "vertical"), a.div.appendChild(a.picker), a.media.volume = a.picker.value / 100, a.media.muted = !1, a.picker.oninput = function() {
-            0 < a.picker.value ? (a.media.muted = !1, a.icon.setAttribute("src", a.url + "/images/sound.png")) : (a.media.muted = !0, a.icon.setAttribute("src", a.url + "/images/mute.png"));
+            0 < a.picker.value ? (a.media.muted = !1, a.icon.setAttribute("src", a.url + "/assets/sound48.png")) : (a.media.muted = !0, a.icon.setAttribute("src", a.url + "/assets/mute48.png"));
             a.media.volume = a.picker.value / 100
         }, c = function(b) {
             a.picker.setAttribute("style", "background: transparent; width: 32px; height: 100px; position: absolute; bottom: 90%; z-index: 1;" + a.div.offsetHeight +
                 "px; right: 0px; -webkit-appearance: slider-vertical; display: " + b)
         }, f = function() {
-            a.icon.setAttribute("src", a.url + "/images/mute.png");
+            a.icon.setAttribute("src", a.url + "/assets/mute48.png");
             i = a.picker.value;
             a.picker.value = 0;
             a.media.volume = 0;
             a.media.muted = !0
         }, e = function() {
-            a.icon.setAttribute("src", a.url + "/images/sound.png");
+            a.icon.setAttribute("src", a.url + "/assets/sound48.png");
             a.picker.value = i;
             a.media.volume = a.picker.value / 100;
             a.media.muted = !1

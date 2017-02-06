@@ -140,7 +140,7 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
 
 
    function InitLocalStream(roomID, token){
-       localStream = Erizo.Stream({audio: false, video: true, data: true});
+       localStream = Erizo.Stream({audio: true, video: true, data: true});
        var room = Erizo.Room({token:token});
        localStream.init();
        localStream.addEventListener("access-accepted", function () {
