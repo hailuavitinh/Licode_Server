@@ -99,7 +99,7 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
                console.log("Token: ",success);
                console.log(" InitLocalStream RoomID: ",roomJson._id);
                console.log(" InitLocalStream Token: ",success.data.Token);
-               InitLocalStream(roomJson._id,success.data.Token);
+               InitLocalStream(userName,roomJson._id,success.data.Token);
            },function(error){
                 $scope.error = error.data;
                 $scope.my.isShowError = false;
@@ -138,9 +138,13 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
         }
     }
 
+    function showUserOnline(username,streamID,isLocal){
+        $("#ulShowUser").append("<li id='li_"+streamID+"'><span class='glyphicon glyphicon-ok-circle' aria-hidden='true' style='color: green'></span> "+username+"</li>")
+    }
 
-   function InitLocalStream(roomID, token){
-       localStream = Erizo.Stream({audio: true, video: true, data: true});
+
+   function InitLocalStream(username,roomID, token){
+       localStream = Erizo.Stream({audio: true, video: true, data: true, attributes : {name: username}});
        var room = Erizo.Room({token:token});
        localStream.init();
        localStream.addEventListener("access-accepted", function () {
@@ -161,7 +165,11 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
                 }
             }
 
-            var remoteDiv_RemoteStream = function(elementID){
+            var remoteDiv_RemoteStream = function(elementID,streamID){
+                /*remove li in Show User online*/
+                $("#li_"+streamID).remove();
+                
+                /*remove div remote stream */
                 $("#"+elementID).remove();
             }
 
@@ -169,6 +177,7 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
                 room.publish(localStream);
                 console.log("room connected");
                 console.log("Local Stream: ",localStream.getID())
+                showUserOnline(username,localStream.getID(),true);
                 subscribeToStream(event.streams);
             });
 
@@ -181,6 +190,12 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
                 div.setAttribute("id",idRmStream);
                 $(".streamVideo").prepend(div);
                 autoResizeItemContainer();
+
+                var attributes = stream.getAttributes();
+                if(attributes.name){
+                    showUserOnline(attributes.name,stream.getID(),false);
+                }
+
                 stream.play(idRmStream);
             });
 
@@ -193,7 +208,7 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
             room.addEventListener("stream-removed",function(streamEvent){
                 var stream = streamEvent.stream;
                 if(stream.elementID !== undefined){
-                    remoteDiv_RemoteStream(stream.elementID);
+                    remoteDiv_RemoteStream(stream.elementID,stream.getID());
                 }
             });
         })

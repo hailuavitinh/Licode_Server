@@ -17,6 +17,8 @@
         border-color: crimson; 
          border-style: solid
     }
+
+    
 </style>
 <script src="./js/erizo.js" type="text/javascript"></script>
 
@@ -28,11 +30,11 @@
         <input type="text" id="inpUserName"  >
         <button type="button" ng-click="accessRoom()">Join</button>
     </div>
-    <div class="alert alert-danger" id="errorDiv" role="alert" ng-show="my.isShowError">
+    <div class="alert alert-danger" id="errorDiv" role="alert" ng-cloak ng-show="my.isShowError">
         {{error}}
     </div>
 </div>
-<div id="showVideoConfernce" ng-show="my.isShowVideoConfernce">
+<div id="showVideoConfernce" ng-cloak ng-show="my.isShowVideoConfernce">
     <div class="streamVideo" >
         <div id="localStream" style="border-color: chartreuse; border-style: solid" class="itemStreamVideo"></div>
     </div>
