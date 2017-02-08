@@ -64,8 +64,10 @@ FConfApp.controller('roomsController',["$scope","svRooms","$location",function($
 
 
 FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function($scope,$routeParams,svRooms){
-    
-    $scope.my = {isShowVideoConfernce:false,isShowError:false};
+    //Declare 
+    var room,screen_stream,localStream,userName;
+
+    $scope.my = {isShowVideoConfernce:false,isShowError:false,isShowEnterUserName:true,isShowShareScreen:false,isShowButtonShareScreen:false};
 
     var roomID = $routeParams.roomID;
     console.log("Angular Join: ",roomID);
@@ -86,7 +88,7 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
 
    $scope.accessRoom = function(){
        console.log("Click accessRoom");
-       var userName = $("#inpUserName").val();
+       userName = $("#inpUserName").val();
        if(userName === null || userName === "" || userName === undefined){
            $scope.error = "Please enter User Name to start talking !!!!"
            $scope.my.isShowError = true;
@@ -95,6 +97,8 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
            var obj = {roomID:roomJson._id,username:userName};
            svRooms.createToken(obj).then(function(success){
                $scope.my.isShowVideoConfernce = true;
+               $scope.my.isShowButtonShareScreen = true;
+               $scope.my.isShowEnterUserName = false;
                $scope.my.isShowError = false;
                console.log("Token: ",success);
                console.log(" InitLocalStream RoomID: ",roomJson._id);
@@ -106,6 +110,20 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
            });
        }
    }
+
+   $scope.Share = function(){
+        if($scope.my.isShowShareScreen == false){// Event Share Screen
+            $scope.my.isShowShareScreen = true;
+            $("#btnShareScreen").html("Stop Sharing");
+            autoResizeItemContainer();
+            InitShareScreenStream(userName);
+        } else { // Event Stop Sharing Screen
+            $("#btnShareScreen").html("Share Screen");
+            screen_stream.close();
+            $scope.my.isShowShareScreen = false;
+            autoResizeItemContainer();
+        }
+    }
 
 
    $scope.append =  function(){
@@ -119,22 +137,29 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
    function autoResizeItemContainer(){
        var i  = $(".itemStreamVideo").length;
         console.log("i : ",i);
-        if(i < 3){
-            console.log("i<3: ",i);
-            $(".itemStreamVideo").css("width","30vw");
-            $(".itemStreamVideo").css("height","40vh");
-        } else if (i<5){
-            console.log("i<5: ",i);
-            $(".itemStreamVideo").css("width","20vw");
-            $(".itemStreamVideo").css("height","30vh");
-        } else if(i == 5){
-            console.log("i==5: ",i);
-            $(".itemStreamVideo").css("width","15vw");
-            $(".itemStreamVideo").css("height","25vh");
-        } else {
-            console.log("default: ",i);
-            $(".itemStreamVideo").css("width","12vw");
+        console.log("Is Share Video :",$scope.my.isShowShareScreen);
+        if($scope.my.isShowShareScreen == true){
+            $(".itemStreamVideo").css("width","13vw");
             $(".itemStreamVideo").css("height","20vh");
+        }
+        else{
+            if(i < 3){
+                console.log("i<3: ",i);
+                $(".itemStreamVideo").css("width","30vw");
+                $(".itemStreamVideo").css("height","40vh");
+            } else if (i<5){
+                console.log("i<5: ",i);
+                $(".itemStreamVideo").css("width","20vw");
+                $(".itemStreamVideo").css("height","30vh");
+            } else if(i == 5){
+                console.log("i==5: ",i);
+                $(".itemStreamVideo").css("width","15vw");
+                $(".itemStreamVideo").css("height","25vh");
+            } else {
+                console.log("default: ",i);
+                $(".itemStreamVideo").css("width","12vw");
+                $(".itemStreamVideo").css("height","20vh");
+            }
         }
     }
 
@@ -142,10 +167,19 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
         $("#ulShowUser").append("<li id='li_"+streamID+"'><span class='glyphicon glyphicon-ok-circle' aria-hidden='true' style='color: green'></span> "+username+"</li>")
     }
 
+    function InitShareScreenStream(username){
+        screen_stream = Erizo.Stream({screen: true,attributes:{name: username}});
+        screen_stream.init();
+        screen_stream.addEventListener("access-accepted",function(){
+            room.publish(screen_stream);
+            screen_stream.play("screen_stream");
+        });
+    }
+
 
    function InitLocalStream(username,roomID, token){
        localStream = Erizo.Stream({audio: true, video: true, data: true, attributes : {name: username}});
-       var room = Erizo.Room({token:token});
+       room = Erizo.Room({token:token});
        localStream.init();
        localStream.addEventListener("access-accepted", function () {
             localStream.play("localStream");
@@ -159,18 +193,23 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
                     var stream = streams[index];
                     console.log("subscribeToStream Stream :",stream);
                     console.log("subscribeToStream StreamID :",stream.getID());
-                    if(localStream.getID() !== stream.getID()){
+                    if(localStream.getID() !== stream.getID() && ( screen_stream === null || screen_stream === undefined || (screen_stream.getID() !== stream.getID()))){
                         room.subscribe(stream);
                     }
                 }
             }
 
-            var remoteDiv_RemoteStream = function(elementID,streamID){
-                /*remove li in Show User online*/
-                $("#li_"+streamID).remove();
+            var remoteDiv_RemoteStream = function(elementID,streamID,isScreen){
                 
-                /*remove div remote stream */
-                $("#"+elementID).remove();
+                if(isScreen == true){
+                    $("#screen_stream").html("");
+                } else {
+                    /*remove li in Show User online*/
+                    $("#li_"+streamID).remove();
+                    
+                    /*remove div remote stream */
+                    $("#"+elementID).remove();
+                }
             }
 
             room.addEventListener("room-connected",function(event){
@@ -184,19 +223,24 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
             room.addEventListener("stream-subscribed", function(streamEvent) {
                 console.log("stream subscribed: ",streamEvent);
                 var stream = streamEvent.stream;
-                var idRmStream = "rmStream_"+stream.getID();
-                var div = document.createElement('div');
-                div.setAttribute("class", "itemStreamVideo");
-                div.setAttribute("id",idRmStream);
-                $(".streamVideo").prepend(div);
-                autoResizeItemContainer();
+                if(stream.hasScreen()){
+                    stream.play("screen_stream");
+                    $scope.my.isShowButtonShareScreen = false;
+                } else {
+                    var idRmStream = "rmStream_"+stream.getID();
+                    var div = document.createElement('div');
+                    div.setAttribute("class", "itemStreamVideo");
+                    div.setAttribute("id",idRmStream);
+                    $(".streamVideo").prepend(div);
+                    autoResizeItemContainer();
 
-                var attributes = stream.getAttributes();
-                if(attributes.name){
-                    showUserOnline(attributes.name,stream.getID(),false);
+                    var attributes = stream.getAttributes();
+                    if(attributes.name){
+                        showUserOnline(attributes.name,stream.getID(),false);
+                    }
+
+                    stream.play(idRmStream);
                 }
-
-                stream.play(idRmStream);
             });
 
             room.addEventListener("stream-added",function(streamEvent){
@@ -208,7 +252,7 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
             room.addEventListener("stream-removed",function(streamEvent){
                 var stream = streamEvent.stream;
                 if(stream.elementID !== undefined){
-                    remoteDiv_RemoteStream(stream.elementID,stream.getID());
+                    remoteDiv_RemoteStream(stream.elementID,stream.getID(),stream.hasScreen());
                 }
             });
         })

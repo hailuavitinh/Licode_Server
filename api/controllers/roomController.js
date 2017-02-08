@@ -22,6 +22,7 @@ var checkStringNullOrEmty = function(a){
 }
 
 var getRooms = function(callback){
+    var res = arguments[1];
     N.API.getRooms(function(roomList){
         var rooms = JSON.parse(roomList);
         console.log("rooms: ",rooms);
@@ -85,7 +86,7 @@ module.exports = function(app) {
     app.get("/api/rooms",function(req,res){
         getRooms(function(rooms){
             res.send(rooms);
-        })
+        },res)
     });
 
     app.get("/api/rooms/:id",function(req,res){

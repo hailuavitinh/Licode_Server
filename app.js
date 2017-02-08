@@ -2,7 +2,9 @@ var express = require('express'),
     bodyParser = require("body-parser"),
     morgan = require("morgan"),
     appRoot = require('app-root-path'),
-    mongoose = require("mongoose");
+    mongoose = require("mongoose"),
+    fs = require("fs"),
+    https = require("https");
 
 
 
@@ -13,6 +15,12 @@ var config = require(appRoot+'/config/config');
 // var config = require(appRoot+"/config/licode_config");
 
 var app = express();
+
+var infoCerfs = {
+    key:fs.readFileSync("certs/key.pem"),
+    cert:fs.readFileSync("certs/cert.pem")
+};
+
 var port = process.env.port || 3005;
 app.use(morgan("dev"));
 app.use(express.static(__dirname + '/public'));
@@ -102,8 +110,11 @@ app.post("/joinRoom",function(req,res){
     });
 });*/
 
-app.listen(port,function(){
-    console.log("Server listening with port ....",port);
-    //console.log(config);
-})
+// app.listen(port,function(){
+//     console.log("Server listening with port ....",port);
+//     //console.log(config);
+// })
 
+https.createServer(infoCerfs,app).listen(port,function(){
+    console.log("Server HTTPS listening with port ....",port);
+});
