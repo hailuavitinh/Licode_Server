@@ -508,6 +508,9 @@
         if (this.isXDomain() && !a.util.ua.hasCORS) {
             var k = document.getElementsByTagName("script")[0],
                 g = document.createElement("script");
+            
+            console.log("F HandShake:" + d +" json="+a.j.length);
+
             g.src = d + "&jsonp=" + a.j.length;
             k.parentNode.insertBefore(g, k);
             a.j.push(function(a) {
@@ -2487,10 +2490,12 @@ Erizo.GetUserMedia = function(b, a, c) {
                 break;
             case "chrome-stable":
                 L.Logger.debug("Screen sharing in Chrome");
-                f = "okeephmleflklcdebijnponpabbmmgeo";
+                //f = "okeephmleflklcdebijnponpabbmmgeo";
+                f = "pilllhclpdkekamgkkkaciffnklfjfoe";
                 b.extensionId && (L.Logger.debug("extensionId supplied, using " + b.extensionId), f = b.extensionId);
                 L.Logger.debug("Screen access on chrome stable, looking for extension");
                 try {
+                    console.log("extensionID: ",f);
                     chrome.runtime.sendMessage(f, {
                         getStream: !0
                     }, function(e) {
@@ -2811,8 +2816,9 @@ Erizo.Room = function(b) {
             reconnect: !1,
             secure: d.secure,
             "force new connection": !0,
-            transports: ["websocket"]
+            transports: ["websocket","polling"]
         });
+        
         a.socket.on("onAddStream", function(b) {
             var d = Erizo.Stream({
                 streamID: b.id,

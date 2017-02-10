@@ -1,0 +1,21 @@
+{
+    "manifest_version": 2,
+    "name": "Share Sharing",
+    "version": "0.1",
+    "content_scripts":[
+        {
+            "matches":["https://localhost:3005/*","http://localhost:3005/*"],
+            "js":["content.js"]
+        }
+    ],
+    "browser_action":{
+        "default_icon":"FPT_logo.png"
+    },
+    "background":{
+        "scripts":["scripts.js"]
+    },
+    "permissions": [ "desktopCapture" ],
+    "externally_connectable": {
+        "matches": ["https://localhost:3005/*","http://localhost:3005/*"]
+    }
+}
