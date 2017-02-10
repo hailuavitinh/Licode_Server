@@ -239,6 +239,7 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
                 var stream = streamEvent.stream;
                 if(stream.hasScreen()){
                     stream.play("screen_stream");
+                    $scope.my.isShowShareScreen = true;
                     $scope.my.isShowButtonShareScreen = false;
                 } else {
                     var idRmStream = "rmStream_"+stream.getID();
