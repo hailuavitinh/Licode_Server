@@ -112,10 +112,12 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
    }
 
    $scope.TestShare = function(){
-        chrome.runtime.sendMessage("pilllhclpdkekamgkkkaciffnklfjfoe",{getstream:true},function(e){
-            console.log("Share Screen Chrome: ",e);
-        });
-        
+        // chrome.runtime.sendMessage("pilllhclpdkekamgkkkaciffnklfjfoe",{getstream:true},function(e){
+        //     console.log("Share Screen Chrome: ",e);
+        // });
+        $scope.my.isShowShareScreen = true;
+        $("#btnShareScreen").html("Stop Sharing");
+        autoResizeItemContainer();
    }
 
    $scope.Share = function(){
@@ -238,9 +240,10 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
                 console.log("stream subscribed: ",streamEvent);
                 var stream = streamEvent.stream;
                 if(stream.hasScreen()){
-                    stream.play("screen_stream");
                     $scope.my.isShowShareScreen = true;
                     $scope.my.isShowButtonShareScreen = false;
+                    autoResizeItemContainer();
+                    stream.play("screen_stream");
                 } else {
                     var idRmStream = "rmStream_"+stream.getID();
                     var div = document.createElement('div');
