@@ -12,7 +12,7 @@
         "default_icon":"FPT_logo.png"
     },
     "background":{
-        "scripts":["scripts.js"]
+        "scripts":["background.js"]
     },
     "permissions": [ "desktopCapture" ],
     "externally_connectable": {

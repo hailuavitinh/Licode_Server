@@ -114,9 +114,6 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
 
    $scope.Share = function(){
         if($scope.my.isShowShareScreen == false){// Event Share Screen
-            $scope.my.isShowShareScreen = true;
-            $("#btnShareScreen").html("Stop Sharing");
-            autoResizeItemContainer();
             InitShareScreenStream(userName);
         } else { // Event Stop Sharing Screen
             screen_stream.close();
@@ -171,9 +168,10 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
         screen_stream = Erizo.Stream({screen: true,attributes:{name: screenName}});
         screen_stream.init();
         screen_stream.addEventListener("access-accepted",function(){
+            ShowSharing();
             room.publish(screen_stream);
             screen_stream.play("screen_stream");
-            console.log("Media stream: ",screen_stream);
+            
 
             //for Click button "Stop Sharing" at the bottom of the screen
              screen_stream.stream.getVideoTracks()[0].onended = function () {
@@ -182,6 +180,13 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
             };
         });
     }
+
+function ShowSharing(){
+    $scope.my.isShowShareScreen = true;
+    $("#btnShareScreen").html("Stop Sharing");
+    autoResizeItemContainer();
+    $scope.$apply();
+}
 
   function HiddenSharing(){
       $("#btnShareScreen").html("Share Screen");
