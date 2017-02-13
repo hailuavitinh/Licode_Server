@@ -3638,7 +3638,7 @@ Erizo.VideoPlayer = function(b) {
     a.div.setAttribute("class", "player");
     a.div.setAttribute("style", "width: 100%; height: 100%; position: relative; background-color: black; overflow: hidden;");
     !1 !== b.options.loader && (a.loader = document.createElement("img"), a.loader.setAttribute("style", "width: 16px; height: 16px; position: absolute; top: 50%; left: 50%; margin-top: -8px; margin-left: -8px"),
-        a.loader.setAttribute("id", "back_" + a.id), a.loader.setAttribute("class", "loader"), a.loader.setAttribute("src", a.url + "/assets/loader.gif"));
+        a.loader.setAttribute("id", "back_" + a.id), a.loader.setAttribute("class", "loader"), a.loader.setAttribute("src", a.url + "/images/loader.gif"));
     a.video = document.createElement("video");
     a.video.setAttribute("id", "stream" + a.id);
     a.video.setAttribute("class", "stream");
@@ -3707,6 +3707,7 @@ Erizo = Erizo || {};
 Erizo.Bar = function(b) {
     var a = Erizo.View({}),
         c, f;
+    console.log("Create Bar: ",b);
     a.elementID = b.elementID;
     a.id = b.id;
     a.div = document.createElement("div");
@@ -3716,11 +3717,18 @@ Erizo.Bar = function(b) {
     a.bar.setAttribute("style", "width: 100%; height: 15%; max-height: 30px; position: absolute; bottom: 0; right: 0; background-color: rgba(255,255,255,0.62)");
     a.bar.setAttribute("id", "subbar_" + a.id);
     a.bar.setAttribute("class", "subbar");
+    /*ThanhDC3*/
+    var bar_username = b.stream.getAttributes().name;
+    a.userNameDIV = document.createElement("a");
+    a.userNameDIV.setAttribute("style","position: absolute;top: 50%;left:50%;transform: translateY(-50%) translateX(-50%);");
+    a.userNameDIV.innerHTML  = bar_username;
+    /*END ThanhDC3 */
     a.link = document.createElement("a");
     a.link.setAttribute("href",
         "http://www.fpt.vn/");
-    a.link.setAttribute("class", "link");
-    a.link.setAttribute("target", "_blank");
+     a.link.setAttribute("class", "link");
+     a.link.setAttribute("target", "_blank");
+   
     a.logo = document.createElement("img");
     a.logo.setAttribute("style", "width: 100%; height: 100%; max-width: 30px; position: absolute; top: 0; left: 2px;");
     a.logo.setAttribute("class", "logo");
@@ -3740,6 +3748,9 @@ Erizo.Bar = function(b) {
     document.getElementById(a.elementID).appendChild(a.div);
     a.div.appendChild(a.bar);
     a.bar.appendChild(a.link);
+    /*ThanhDC3*/
+        a.bar.appendChild(a.userNameDIV);
+    /*END THANHDC3 */
     a.link.appendChild(a.logo);
     if (!b.stream.screen && (void 0 === b.options || void 0 === b.options.speaker || !0 === b.options.speaker)) a.speaker = new Erizo.Speaker({
         elementID: "subbar_" + a.id,

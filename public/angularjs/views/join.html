@@ -44,7 +44,6 @@
             <button type="button" ng-click="accessRoom()">Join</button>
            
         </div>
-         <button type="button" ng-click="TestShare()">Test Share</button>
         <button id="btnShareScreen" type="button" ng-cloak ng-show="my.isShowButtonShareScreen" ng-click="Share()">Share Screen</button>
     </div>
     <div class="alert alert-danger" id="errorDiv" role="alert" ng-cloak ng-show="my.isShowError">
@@ -61,3 +60,15 @@
         <div id="localStream" style="border-color: chartreuse; border-style: solid" class="itemStreamVideo"></div>
     </div>
 </div>
+<script>
+     window.addEventListener('message', function(event) {
+        // We only accept messages from ourselves
+        console.log("Event Stop: ",event);
+        // if (event.source != window) return;
+
+        // if (event.data.type && ((event.data.type === 'SS_UI_REQUEST') ||
+        //                         (event.data.type === 'SS_UI_CANCEL'))) {
+        //     console.log("adsdasd")
+        // }
+    }, false);
+</script>

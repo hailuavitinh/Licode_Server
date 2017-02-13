@@ -111,14 +111,6 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
        }
    }
 
-   $scope.TestShare = function(){
-        // chrome.runtime.sendMessage("pilllhclpdkekamgkkkaciffnklfjfoe",{getstream:true},function(e){
-        //     console.log("Share Screen Chrome: ",e);
-        // });
-        $scope.my.isShowShareScreen = true;
-        $("#btnShareScreen").html("Stop Sharing");
-        autoResizeItemContainer();
-   }
 
    $scope.Share = function(){
         if($scope.my.isShowShareScreen == false){// Event Share Screen
@@ -127,10 +119,8 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
             autoResizeItemContainer();
             InitShareScreenStream(userName);
         } else { // Event Stop Sharing Screen
-            $("#btnShareScreen").html("Share Screen");
             screen_stream.close();
-            $scope.my.isShowShareScreen = false;
-            autoResizeItemContainer();
+            HiddenSharing()
         }
     }
 
@@ -177,13 +167,29 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
     }
 
     function InitShareScreenStream(username){
-        screen_stream = Erizo.Stream({screen: true,attributes:{name: username}});
+        var screenName = "Screen: " + userName;
+        screen_stream = Erizo.Stream({screen: true,attributes:{name: screenName}});
         screen_stream.init();
         screen_stream.addEventListener("access-accepted",function(){
             room.publish(screen_stream);
             screen_stream.play("screen_stream");
+            console.log("Media stream: ",screen_stream);
+
+            //for Click button "Stop Sharing" at the bottom of the screen
+             screen_stream.stream.getVideoTracks()[0].onended = function () {
+                screen_stream.close();
+                HiddenSharing();
+            };
         });
     }
+
+  function HiddenSharing(){
+      $("#btnShareScreen").html("Share Screen");
+      $scope.my.isShowShareScreen = false;
+      $scope.my.isShowButtonShareScreen = true;
+      autoResizeItemContainer();
+      $scope.$apply();
+  }
 
 
    function InitLocalStream(username,roomID, token){
@@ -219,6 +225,8 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
                 
                 if(isScreen == true){
                     $("#screen_stream").html("");
+
+                    HiddenSharing()
                 } else {
                     /*remove li in Show User online*/
                     $("#li_"+streamID).remove();
@@ -243,7 +251,9 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
                     $scope.my.isShowShareScreen = true;
                     $scope.my.isShowButtonShareScreen = false;
                     autoResizeItemContainer();
+                     $scope.$apply();
                     stream.play("screen_stream");
+                    
                 } else {
                     var idRmStream = "rmStream_"+stream.getID();
                     var div = document.createElement('div');
