@@ -39,6 +39,19 @@ chrome.runtime.onMessageExternal.addListener(
                     sendResponse({ streamId: streamId});
                 });
                 return true;
+        } else if (request.message === "enable"){
+            console.log("Received: enable");
+            var extensionID = request.extensionID;
+            chrome.management.get(extensionID, function(result) {
+                console.log(" Detect Content Scripts: ",result);
+                console.log(" Detect Content Scripts Enabled: ",result.enabled);
+                var enabled = "0";
+                if(result.enabled){
+                    enabled = "1";
+                }
+                sendResponse({extension: enabled});
+            });
+            return true;
         } else {
             console.error("Unknown request");
             sendResponse({ error : "Unknown request" });

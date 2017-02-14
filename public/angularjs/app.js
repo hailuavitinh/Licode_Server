@@ -63,7 +63,7 @@ FConfApp.controller('roomsController',["$scope","svRooms","$location",function($
 
 
 
-FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function($scope,$routeParams,svRooms){
+FConfApp.controller('joinController',["$timeout","$scope","$routeParams","svRooms",function($timeout,$scope,$routeParams,svRooms){
     //Declare 
     var room,screen_stream,localStream,userName;
 
@@ -114,7 +114,14 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
 
    $scope.Share = function(){
         if($scope.my.isShowShareScreen == false){// Event Share Screen
-            InitShareScreenStream(userName);
+            $scope.my.isShowError = false;
+            var isChrome = !!window.chrome && !!window.chrome.webstore; 
+            if(isChrome) {
+                InitShareScreenStream(userName);
+            } else {
+                $scope.error = "Share Screen don't support this browser. Please switch Chrome to use it !";
+                $scope.my.isShowError = true;
+            }
         } else { // Event Stop Sharing Screen
             screen_stream.close();
             HiddenSharing()
@@ -179,7 +186,22 @@ FConfApp.controller('joinController',["$scope","$routeParams","svRooms",function
                 HiddenSharing();
             };
         });
+
+        screen_stream.addEventListener("access-denied",function(event){
+            console.log("Access-denied: ",event);
+            var content = event.msg.code;
+            if (event.msg.code === "Access to screen denied"){
+                content += "<br/>Please download <a href='./downloads/extensions.crx' download>extensions.crx</a> to install this plug-in for Google Chrome"
+
+            }
+            $scope.error = "";
+            $("#errorDiv").html(content);
+            $scope.my.isShowError = true;
+            TimeoutHidenErrorDiv();
+            $scope.$apply();
+        });
     }
+
 
 function ShowSharing(){
     $scope.my.isShowShareScreen = true;
@@ -194,6 +216,13 @@ function ShowSharing(){
       $scope.my.isShowButtonShareScreen = true;
       autoResizeItemContainer();
       $scope.$apply();
+  }
+
+  function TimeoutHidenErrorDiv(){
+      $timeout(function(){
+          $scope.my.isShowError = false;
+          $scope.error = "";
+      },5000);
   }
 
 
@@ -222,6 +251,8 @@ function ShowSharing(){
                             room.subscribe(stream);
                         } //end if
                         
+                    } else { // remote stream là local stream --> thì chuyển màu border div lại, để biết trạng thái kết nối socket thành công hay không ?
+                        $("#localStream").css("border-color","chartreuse");
                     }
                 }
             }

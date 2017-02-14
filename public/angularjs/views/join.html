@@ -27,9 +27,7 @@
         height: 60vh;
         margin: 0 auto 3px;
         transition: 1s;
-    }
-
-    
+    }    
 </style>
 <script src="./js/erizo.js" type="text/javascript"></script>
 <script src="./js/socket.io.js" type="text/javascript"></script>
@@ -57,18 +55,6 @@
 </div>
 <div id="showVideoConfernce" ng-cloak ng-show="my.isShowVideoConfernce">
     <div class="streamVideo" >
-        <div id="localStream" style="border-color: chartreuse; border-style: solid" class="itemStreamVideo"></div>
-    </div>
+        <div id="localStream" style="border-color:#f4aa42 ; border-style: solid" class="itemStreamVideo"></div>
+    </div> 
 </div>
-<script>
-     window.addEventListener('message', function(event) {
-        // We only accept messages from ourselves
-        console.log("Event Stop: ",event);
-        // if (event.source != window) return;
-
-        // if (event.data.type && ((event.data.type === 'SS_UI_REQUEST') ||
-        //                         (event.data.type === 'SS_UI_CANCEL'))) {
-        //     console.log("adsdasd")
-        // }
-    }, false);
-</script>
