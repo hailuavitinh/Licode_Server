@@ -96,14 +96,25 @@ FConfApp.controller('joinController',["$timeout","$scope","$routeParams","svRoom
        } else {
            var obj = {roomID:roomJson._id,username:userName};
            svRooms.createToken(obj).then(function(success){
-               $scope.my.isShowVideoConfernce = true;
-               $scope.my.isShowButtonShareScreen = true;
-               $scope.my.isShowEnterUserName = false;
-               $scope.my.isShowError = false;
                console.log("Token: ",success);
                console.log(" InitLocalStream RoomID: ",roomJson._id);
                console.log(" InitLocalStream Token: ",success.data.Token);
-               InitLocalStream(userName,roomJson._id,success.data.Token);
+               DetectHasCamera_Audio_Speaker(function(result){
+                   console.log("Device Kind: ",result);
+                   if(result.IsEnumerateDevices){
+                       $scope.my.isShowVideoConfernce = true;
+                       $scope.my.isShowButtonShareScreen = true;
+                       $scope.my.isShowEnterUserName = false;
+                       $scope.my.isShowError = false;
+                       $scope.$apply();
+                       InitLocalStream(userName,roomJson._id,success.data.Token,result.IsSpeaker,result.IsCamera);
+                   } else {
+                        $scope.error = result.content;
+                        $scope.my.isShowError = true;
+                        $scope.my.isShowVideoConfernce = false;
+                        $scope.$apply();
+                   }
+               }) 
            },function(error){
                 $scope.error = error.data;
                 $scope.my.isShowError = false;
@@ -202,6 +213,14 @@ FConfApp.controller('joinController',["$timeout","$scope","$routeParams","svRoom
         });
     }
 
+function addImageUserForStream_NotCamera(idDivStream){
+    var idDiv = "#"+idDivStream;
+    $(idDiv).css("background-image","url(./images/user_icon.png)");
+    $(idDiv).css("background-position","center");
+    $(idDiv).css("background-repeat","no-repeat");
+    $(idDiv).css("background-color","white");
+    $(idDiv).css("background-size","contain");
+}
 
 function ShowSharing(){
     $scope.my.isShowShareScreen = true;
@@ -225,9 +244,39 @@ function ShowSharing(){
       },5000);
   }
 
+  function DetectHasCamera_Audio_Speaker(callback){
+      var result = {IsEnumerateDevices: false,IsAudio: false,IsSpeaker:false,IsCamera:false,content:""};
+      if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+            result.content = "Please switch Chorme or FireFox browser to use this function !";
+            callback(result);
+      }
+      result.IsEnumerateDevices = true;
 
-   function InitLocalStream(username,roomID, token){
-       localStream = Erizo.Stream({audio: true, video: true, data: true, attributes : {name: username}});
+      navigator.mediaDevices.enumerateDevices().then(function(devices){
+          devices.forEach(function(itemDevice){
+              if(itemDevice.kind === "audioinput"){
+                  result.IsAudio = true;
+              }
+              
+              if(itemDevice.kind === "videoinput"){
+                  result.IsCamera = true;
+              }
+
+              if(itemDevice.kind === "audiooutput"){
+                  result.IsSpeaker = true;  
+            }
+          });
+          callback(result);
+      }).catch(function(err) {
+          result.IsEnumerateDevices = false;
+          result.content = "Error: " + err.name + " - " + err.message;
+          callback(result);
+      });
+  }
+
+   function InitLocalStream(username,roomID, token,isSpeaker,isCamera){
+       localStream = Erizo.Stream({audio: isSpeaker, video: isCamera, data: true, attributes : {name: username}});
+       console.log("LocalStream Init:",localStream);
        room = Erizo.Room({token:token});
        localStream.init();
        localStream.addEventListener("access-accepted", function () {
@@ -253,6 +302,9 @@ function ShowSharing(){
                         
                     } else { // remote stream là local stream --> thì chuyển màu border div lại, để biết trạng thái kết nối socket thành công hay không ?
                         $("#localStream").css("border-color","chartreuse");
+                        if(!localStream.hasVideo()){
+                            addImageUserForStream_NotCamera("player_local");
+                        }
                     }
                 }
             }
@@ -297,13 +349,15 @@ function ShowSharing(){
                     div.setAttribute("id",idRmStream);
                     $(".streamVideo").prepend(div);
                     autoResizeItemContainer();
-
                     var attributes = stream.getAttributes();
                     if(attributes.name){
                         showUserOnline(attributes.name,stream.getID(),false);
                     }
 
                     stream.play(idRmStream);
+                    if(!stream.hasVideo()){
+                        addImageUserForStream_NotCamera("player_"+stream.getID());
+                    }
                 }
             });
 
