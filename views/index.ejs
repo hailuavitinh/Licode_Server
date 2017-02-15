@@ -15,6 +15,7 @@
     <!--<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>-->
     <script type="text/javascript" src="./angularjs/app.js"></script>
     <script type="text/javascript" src="./angularjs/services/svRooms.js"></script>
+    <script type="text/javascript" src="./angularjs/services/svLocalStream.js"></script>
     <style>
           /*.sidebar{
               background-color: darkgray;
@@ -49,7 +50,7 @@
        </style>
 </head>
 
-<body ng-controller="mainController">
+<body ng-controller="roomsController">
     <div id="main">
         <!--<div class="navbar navbar-default" style="background-color:#dd4814">
             <a><i class="fa fa-bars" style="font-size: 30px;color: white;line-height: inherit;float:left;padding-left: 5px;" aria-hidden="true" onclick="openMenu()"></i></a>
@@ -71,7 +72,7 @@
                 <div class="navbar-collapse collapse navbar-responsive-collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="#!/">Home</a></li>
-                        <li><a href="#!/rooms">Rooms</a></li>
+                        <!--<li><a href="#!/rooms">Rooms</a></li>-->
                     </ul>
                 </div>
                 <!--<ul class="nav navbar-nav navbar-right" style="padding-right: 5px;">

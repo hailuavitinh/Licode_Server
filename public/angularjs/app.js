@@ -3,8 +3,10 @@ var FConfApp = angular.module('FConfApp',['ngRoute']);
 FConfApp.config(function($routeProvider,$locationProvider){
     $routeProvider
         .when('/',{
-            templateUrl:'angularjs/views/home.html',
-            controller:'mainController'
+            // templateUrl:'angularjs/views/home.html',
+            // controller:'mainController'
+            templateUrl:'angularjs/views/rooms.html',
+            controller:'roomsController'
         })
         .when('/about',{
             templateUrl:'angularjs/views/about.html',
@@ -47,7 +49,18 @@ FConfApp.controller('aboutController',function($scope){
     $scope.message='about Controller';
 });
 
-FConfApp.controller('roomsController',["$scope","svRooms","$location",function($scope,svRooms,$location){
+FConfApp.controller('roomsController',["$scope","svRooms","$location","svLocalStream",function($scope,svRooms,$location,svLocalStream){
+
+    var localStream = svLocalStream.getLocalStream();
+    if(localStream){
+        // console.log("localStream: ",localStream);
+        // var track = localStream.stream.getTracks()[0];
+        // console.log("Rooms - Track: ",track);
+        // track.stop();
+        // $scope.$apply();
+        svLocalStream.setLocalStream(null);
+        window.location.reload();
+    }
 
     var localUrl = $location.host()+":"+$location.port();
     $scope.localUrl=localUrl+"/#!/";
@@ -59,11 +72,14 @@ FConfApp.controller('roomsController',["$scope","svRooms","$location",function($
         console.log("API Rooms error: ",error);
     });
     $scope.message='rooms Controller';
+
+    
+
 }]);
 
 
 
-FConfApp.controller('joinController',["$timeout","$scope","$routeParams","svRooms",function($timeout,$scope,$routeParams,svRooms){
+FConfApp.controller('joinController',["$timeout","$scope","$routeParams","svRooms","svLocalStream",function($timeout,$scope,$routeParams,svRooms,svLocalStream){
     //Declare 
     var room,screen_stream,localStream,userName;
 
@@ -281,6 +297,7 @@ function ShowSharing(){
        localStream.init();
        localStream.addEventListener("access-accepted", function () {
             localStream.play("localStream");
+            svLocalStream.setLocalStream(localStream);
             console.log("Local: ",localStream);
             console.log("token:",L.Base64.decodeBase64(token));
             room.connect();
