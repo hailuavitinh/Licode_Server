@@ -134,6 +134,7 @@ FConfApp.controller('joinController',["$timeout","$scope","$routeParams","svRoom
            },function(error){
                 $scope.error = error.data;
                 $scope.my.isShowError = false;
+                $scope.$apply();
            });
        }
    }
@@ -389,6 +390,14 @@ function ShowSharing(){
                 if(stream.elementID !== undefined){
                     remoteDiv_RemoteStream(stream.elementID,stream.getID(),stream.hasScreen());
                 }
+            });
+
+            room.addEventListener("room-error",function(event){
+                console.log("Room-error: ",event);
+            });
+
+            room.addEventListener("room-disconnected",function(event){
+                console.log("Room-disconnected: ",event);
             });
         })
    }
