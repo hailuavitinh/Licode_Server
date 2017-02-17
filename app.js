@@ -17,8 +17,8 @@ var config = require(appRoot+'/config/config');
 var app = express();
 
 var infoCerfs = {
-    key:fs.readFileSync("certs/key.pem"),
-    cert:fs.readFileSync("certs/cert.pem")
+    key:fs.readFileSync("certs/privkey.pem"),  //("certs/key.pem"),
+    cert:fs.readFileSync("certs/fullchain.pem") //("certs/cert.pem")
 };
 
 var port = process.env.port || 3005;
