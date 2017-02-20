@@ -4,7 +4,7 @@
     "version": "0.1",
     "content_scripts":[
         {
-            "matches":["https://localhost:3005/*","http://localhost:3005/*","https://192.168.1.14:3005/*","http://192.168.1.14:3005/*","https://118.69.135.101:3005/*","http://118.69.135.101:3005/*"],
+            "matches":["https://localhost:3005/*","http://localhost:3005/*","https://192.168.1.14:3005/*","http://192.168.1.14:3005/*","https://118.69.135.101:3005/*","http://118.69.135.101:3005/*","http://thanhdc.xyz/*","https://thanhdc.xyz/*"],
             "js":["content.js"]
         }
     ],
@@ -16,7 +16,7 @@
     },
     "permissions": [ "management","desktopCapture" ],
     "externally_connectable": {
-        "matches": ["https://localhost:3005/*","http://localhost:3005/*","https://192.168.1.14:3005/*","http://192.168.1.14:3005/*","https://118.69.135.101:3005/*","http://118.69.135.101:3005/*"]
+        "matches": ["https://localhost:3005/*","http://localhost:3005/*","https://192.168.1.14:3005/*","http://192.168.1.14:3005/*","https://118.69.135.101:3005/*","http://118.69.135.101:3005/*","http://thanhdc.xyz/*","https://thanhdc.xyz/*"]
     },
     "key":"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvSfjJSTttOQhk5UTig5Fhs0vH6auR7WApeWmGakdqsjM+Irk28BgcYVVlZqpv9P/L9annU5tXfeISEiPiHLw/jf4nptTppKXRimjbXPmHfamKCurdrj8okkpx9zYUnwEg1aeIHY/mh7Y49ktrarn6pwfx59x3xCCkttOOT4CQeS3owVO2MvOgqZ+OuQieJAECjxV7z1veOolcEOLqVeegwY+7YKidmYTzcNz/RBEvWbao5g5bNaMT3E6LIV5MzLvvaMDaA/snV3XAqSZyVgd5R3RL2LfOHeQ2y"
 }
